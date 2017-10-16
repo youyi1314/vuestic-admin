@@ -134,6 +134,12 @@
                     v-model="chosenCountry"
                     v-bind:options="countriesList">
                   </vuestic-simple-select>
+                  <vuestic-simple-select
+                    label="Country select Autocomplete"
+                    v-model="chosenCountry"
+                    v-bind:options="countriesList"
+                    v-bind:autocomplete="true">
+                  </vuestic-simple-select>
                 </fieldset>
               </div>
               <div class="col-md-4">

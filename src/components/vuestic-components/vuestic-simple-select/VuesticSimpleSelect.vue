@@ -4,10 +4,11 @@
        :class="{'has-error': hasErrors()}">
     <div class="input-group dropdown-toggle" @click="$refs.scrollbar.onContainerResize()">
       <input
-        readonly
+        :readonly="!autocomplete"
         :class="{'has-value': !!displayValue}"
         v-model="displayValue"
         :name="name"
+        v-on:input="filter()"
         required/>
       <i class="ion ion-chevron-down icon-right input-icon"></i>
       <label class="control-label">{{label}}</label><i class="bar"></i>
@@ -17,7 +18,7 @@
       <scrollbar ref="scrollbar">
         <div class="dropdown-menu-content">
           <div class="dropdown-item"
-               :class="{'selected': isOptionSelected(option)}" v-for="option in options"
+               :class="{'selected': isOptionSelected(option)}" v-for="option in displayOptions"
                @click="selectOption(option)">
             <span class="ellipsis">{{option}}</span>
           </div>
@@ -30,6 +31,7 @@
 <script>
   import Dropdown from '../../../directives/Dropdown'
   import Scrollbar from '../vuestic-scrollbar/VuesticScrollbar.vue'
+  import selectMixin from '../mixins/select-mixin.js'
 
   export default {
     name: 'vuestic-simple-select',
@@ -56,12 +58,20 @@
       name: {
         type: String,
         default: 'simple-select'
+      },
+      autocomplete: {
+        type: Boolean,
+        default: false
       }
     },
     mounted () {
       this.updateDisplayValue(this.value)
       this.$emit('input', this.value)
     },
+    created () {
+      this.displayOptions = this.options
+    },
+    mixins: [selectMixin],
     methods: {
       isOptionSelected (option) {
         return this.value === option
@@ -92,6 +102,11 @@
       },
       showRequiredError () {
         return `The ${this.name} field is required`
+      },
+      filter () {
+        if (this.autocomplete) {
+          this.displayOptions = this.doFilter(this.options, this.displayValue)
+        }
       }
     }
   }
