@@ -1,11 +1,11 @@
 <template>
   <div class="vuestic-data-table table-responsive"
        :class="{'data-loading': loading}">
-    <div class="d-flex flex-md-row flex-column align-items-center" :class="controlsAlignmentClass">
+    <div class="d-flex flex-md-row flex-column align-items-center" v-if="filterInputShown || perPageSelectorShown" :class="controlsAlignmentClass">
       <filter-bar
         @filter="onFilterSet"
         :label="filterInputLabel"
-        v-show="filterInputShown"
+        v-if="filterInputShown"
       />
       <div class="datatable-controls d-flex flex-row">
         <div class="form-group">
@@ -15,7 +15,7 @@
                         :label="itemsPerPageLabel"
                         :defaultPerPage="defaultPerPageComputed"
                         @items-per-page="onItemsPerPage"
-                        v-show="perPageSelectorShown"></items-per-page>
+                        v-if="perPageSelectorShown"></items-per-page>
       </div>
     </div>
     <div v-show="loading" class="data-table-loading">
